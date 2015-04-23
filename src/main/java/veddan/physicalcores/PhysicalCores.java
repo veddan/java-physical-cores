@@ -87,8 +87,6 @@ public class PhysicalCores {
     }
 
     private static Integer readFromWMIC() {
-        // For some reason, reading WMIC's output from a pipe just blocks forever
-        // Instead, have it written to a temp file and read it from there.
         ProcessBuilder pb = new ProcessBuilder("WMIC", "/OUTPUT:STDOUT", "CPU", "Get", "/Format:List");
         pb.redirectErrorStream(true);
         Process wmicProc;
@@ -101,7 +99,6 @@ public class PhysicalCores {
             return null;
         }
         waitFor(wmicProc);
-        //try (FileInputStream in = new FileInputStream(tmp)) {
         try (InputStream in = wmicProc.getInputStream()) {
             String wmicOutput = readToString(in, Charset.forName("US-ASCII"));
             return parseWmicOutput(wmicOutput);
