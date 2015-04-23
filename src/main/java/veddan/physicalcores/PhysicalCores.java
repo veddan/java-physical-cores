@@ -41,12 +41,21 @@ public class PhysicalCores {
      * installed number, the available number will be returned.
      * </p>
      * <p>
-     * This method can be rather expensive to call, especially on Windows, so store
-     * its result instead of calling it repeatedly.
+     * The first call to the method may take a long time, especially on Windows.
+     * Subsequent calls will return a cached value.
+     * The method is threadsafe.
      * </p>
      * @return number of physical cores, or {@code null} if it could not be determined
      */
     public static Integer physicalCoreCount() {
+        return LazyHolder.physicalCoreCount;
+    }
+
+    private static class LazyHolder {
+        private static final Integer physicalCoreCount = findPhysicalCoreCount();
+    }
+
+    private static Integer findPhysicalCoreCount() {
         if (OS_NAME == null) {
             return null;
         }
