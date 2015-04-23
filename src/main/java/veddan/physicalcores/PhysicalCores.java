@@ -18,11 +18,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Static utility class for finding the number of physical CPU cores.
+ */
 public class PhysicalCores {
 
     private static final Logger log = LoggerFactory.getLogger(PhysicalCores.class);
 
     private static final String OS_NAME = getOSName();
+
+    private PhysicalCores() { }
 
     /**
      * <p>
