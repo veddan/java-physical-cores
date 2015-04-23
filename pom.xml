@@ -6,7 +6,7 @@
 
     <groupId>veddan</groupId>
     <artifactId>physical-cores</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
     <name>physical-cores</name>
     <description>A small utility for finding the number of physical CPU cores.</description>
     <developers>
