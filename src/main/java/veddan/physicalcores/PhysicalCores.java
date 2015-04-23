@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -83,7 +82,6 @@ public class PhysicalCores {
             log.info("Old Linux without {}. Will not be able to provide core count.", path);
             return null;
         }
-        Reader reader = null;
         try (InputStream in = new FileInputStream(cpuinfo)) {
             String s = readToString(in, Charset.forName("UTF-8"));
             Set<String> coreIdRows = new HashSet<>();
@@ -109,7 +107,7 @@ public class PhysicalCores {
             wmicProc.getOutputStream().close();
         } catch (IOException | SecurityException e) {
             log.error("Failed to spawn WMIC process. " +
-                    "Will not be able to provide physical core count.", e);
+                      "Will not be able to provide physical core count.", e);
             return null;
         }
         waitFor(wmicProc);
@@ -253,7 +251,8 @@ public class PhysicalCores {
         try {
             return proc.waitFor();
         } catch (InterruptedException e) {
-            throw new RuntimeException("Can't happen", e);
+            log.warn("Interrupted while waiting for process", e);
+            return 1;
         }
     }
 }
