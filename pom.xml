@@ -7,14 +7,32 @@
     <groupId>veddan</groupId>
     <artifactId>physical-cores</artifactId>
     <version>0.2-SNAPSHOT</version>
+
     <name>physical-cores</name>
     <description>A small utility for finding the number of physical CPU cores.</description>
+    <url>https://github.com/veddan/java-physical-cores</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <developers>
         <developer>
             <name>Viktor Dahl</name>
             <email>pazaconyoman@gmail.com</email>
+            <url>https://github.com/veddan</url>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:veddan/java-physical-cores.git</connection>
+        <developerConnection>scm:git:git@github.com:veddan/java-physical-cores.git</developerConnection>
+        <url>git@github.com:veddan/java-physical-cores.git</url>
+    </scm>
 
     <build>
         <plugins>
@@ -26,6 +44,30 @@
                     <target>7</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
