@@ -1,8 +1,5 @@
 package veddan.physicalcores;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,9 +10,14 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Static utility class for finding the number of physical CPU cores.
@@ -84,13 +86,27 @@ public class PhysicalCores {
         }
         try (InputStream in = new FileInputStream(cpuinfo)) {
             String s = readToString(in, Charset.forName("UTF-8"));
-            Set<String> coreIdRows = new HashSet<>();
-            for (String row : s.split("\n")) {
-                if (row.startsWith("core id")) {
-                    coreIdRows.add(row);
-                }
-            }
-            return coreIdRows.isEmpty() ? null : coreIdRows.size();
+            // Count number of different tuples (physical id, core id) to discard hyper threading and multiple sockets  
+            Map<String, Set<String>> physicalIdToCoreId = new HashMap<>();
+
+            int coreIdCount = 0;
+            String[] split = s.split("\n");
+            String latestPhysicalId = null;
+            for (String row : split)
+                if (row.startsWith("physical id")) {
+                    latestPhysicalId = row;
+                    if (physicalIdToCoreId.get(row) == null)
+                        physicalIdToCoreId.put(latestPhysicalId, new HashSet<String>());
+
+                } else if (row.startsWith("core id"))
+                    // "physical id" row should always come before "core id" row, so that physicalIdToCoreId should
+                    // not be null here.
+                    physicalIdToCoreId.get(latestPhysicalId).add(row);
+
+            for (Set<String> coreIds : physicalIdToCoreId.values())
+                coreIdCount += coreIds.size();
+
+            return coreIdCount;
         } catch (SecurityException | IOException e) {
             String msg = String.format("Error while reading %s", path);
             log.error(msg, e);
